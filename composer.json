@@ -1,0 +1,14 @@
+{
+  "require": {
+    "zyberspace/steam-web-api-client": "^0.4.0",
+    "php": ">=5.4.0",
+    "iignatov/lightopenid": "*",
+    "facebook/graph-sdk": "^5.4"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/iignatov/LightOpenID"
+    }
+  ]
+}
