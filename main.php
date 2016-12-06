@@ -9,8 +9,6 @@
 require('vendor/autoload.php');
 
 
-
-
 /**BATTLE.NET OR BLIZZARD ACCOUNT OR WHATEVER THEY'RE CHANGING INTO**/
 /**-----------------------------------GRACIAS ULMINIA!!--------------------------**/
 

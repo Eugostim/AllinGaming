@@ -7,7 +7,44 @@
  */
 
 require('vendor/autoload.php');
+require_once ('connections/connection.php');
+ini_set('max_execution_time', 300);
 
+/**Codigo para inserir jogos steam na base de dados**/
+
+?>
+    <form method="post" action="?ask">
+        <input type="submit" title="CRIAR O INFERNO STEAM!!">
+    </form>
+<?php
+
+
+if (isset($_GET["ask"])) {
+    $hell=json_decode(file_get_contents("https://api.steampowered.com/ISteamApps/GetAppList/v2"),true);
+    $lilhell=$hell["applist"];
+    $heaven=$lilhell["apps"];
+
+    for($i=0;$i<count($heaven);$i++){
+        $selected=$heaven[$i];
+        $appID=$selected["appid"];
+        $gameName=$selected["name"];
+        $query = "INSERT INTO bibliotecasteam(idbiblioteca, nome) VALUES(?,?)";
+        $games_insert = mysqli_prepare($connect, $query);
+        mysqli_stmt_bind_param($games_insert, 'is', $appID, $gameName);
+        mysqli_stmt_execute($games_insert);
+        mysqli_stmt_close($games_insert);
+
+    }
+/**------------------------**/
+
+
+//========== Obter a hash em vigor para validar se o utilizador tem permissões para editar o username =========
+//    $query = "INSERT INTO bibliotecasteam(idbiblioteca, nome) VALUES(?,?)";
+//    $games_insert = mysqli_prepare($connect, $query);
+//    mysqli_stmt_bind_param($games_insert, 'is', $appID, $gameName);
+//    mysqli_stmt_execute($games_insert);
+//    mysqli_stmt_close($games_insert);
+}
 ///**STEAM**/
 ///**----------------------------baseado no exemplo do LightOpenId-----------------------------*/
 //http://steamcommunity.com/openid
@@ -28,10 +65,10 @@ require('vendor/autoload.php');
 //            header('Location: ' . $openid->authUrl());
 //        }
 //        ?>
-<!--        <form action="?login" method="post">-->
-<!--            <input type="image" src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png">-->
-<!--        </form>-->
-<!--        --><?php
+    <!--        <form action="?login" method="post">-->
+    <!--            <input type="image" src="https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_01.png">-->
+    <!--        </form>-->
+    <!--        --><?php
 //    }
 //    elseif($openid->mode == 'cancel')
 //    {
