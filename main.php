@@ -7,6 +7,7 @@
  */
 
 require('vendor/autoload.php');
+require('connections/connection.php');
 
 
 /**BATTLE.NET OR BLIZZARD ACCOUNT OR WHATEVER THEY'RE CHANGING INTO**/
@@ -177,6 +178,26 @@ if (isset($_GET['loginFacebook'])){
 //    para mostrar o recebido
     var_dump($user_profile);
 
+    $nome=$user_profile->displayName;
+    $email=$user_profile->emailVerified;
+    $img=$user_profile->photoURL;
+    $idade=$user_profile->age;
+    $genero=$user_profile->gender;
+
+    if (is_null($idade)){
+        //A culpa disto é do Fábio!
+        $idade="";
+    }
+    if (is_null($genero)){
+        $genero="";
+    }
+
+    $query = "INSERT INTO utilizadores(nome,email,idade,genero,imgPerfil) VALUES(?,?,?,?,?)";
+    $user_insert = mysqli_prepare($connect, $query);
+    mysqli_stmt_bind_param($user_insert, 'sssss', $nome, $email,$idade,$genero, $img);
+    mysqli_stmt_execute($user_insert);
+    mysqli_stmt_close($user_insert);
+
 }
 
 if (isset($_GET['loginGoogle'])){
@@ -187,7 +208,7 @@ if (isset($_GET['loginGoogle'])){
             "Google" => array (
                 "enabled" => true,
                 "keys" => array("id" => "297939951141-og62mhv97f776puvjics1o1kq9qi4hoa.apps.googleusercontent.com", "secret" => "f-MK8SfZ5Q2TIQsAfSVo6wtY"),
-                "scope"=>"profile"
+                "scope"=>"email"
             )));
 
     require_once( "includes/hybridauth-2.8.0/hybridauth/Hybrid/Auth.php" );
@@ -199,6 +220,25 @@ if (isset($_GET['loginGoogle'])){
     $user_profile = $adapter->getUserProfile();
 
 //    para mostrar o recebido
-    var_dump($user_profile);
+//    var_dump($user_profile);
+
+    $nomeG=$user_profile->displayName;
+    $emailG=$user_profile->emailVerified;
+    $imgG=$user_profile->photoURL;
+    $idadeG=$user_profile->age;
+    $generoG=$user_profile->gender;
+
+    if (is_null($idadeG)){
+        $idade="0";
+    }
+    if (is_null($generoG)){
+        $genero="";
+    }
+
+    $queryGoogle = "INSERT INTO utilizadores(nome,email,idade,genero,imgPerfil) VALUES(?,?,?,?,?)";
+    $user_insertG = mysqli_prepare($connect, $queryGoogle);
+    mysqli_stmt_bind_param($user_insertG, 'sssss', $nomeG, $emailG,$idadeG,$generoG, $imgG);
+    mysqli_stmt_execute($user_insertG);
+    mysqli_stmt_close($user_insertG);
 
 }

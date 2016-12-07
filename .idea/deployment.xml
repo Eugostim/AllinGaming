@@ -5,7 +5,7 @@
       <paths name="Servidor Lab">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping local="$PROJECT_DIR$" web="/myhosting.ua.pt" />
           </mappings>
         </serverdata>
       </paths>
