@@ -6,10 +6,10 @@
  * Time: 14:36
  */
 
-//$host = "labmm.clients.ua.pt";
-//$user = "deca_15L4_27_dbo";
-//$pass = "QtRm7y";
-//$db = "deca_15L4_27";
+//$host = "mysql-sa.mgmt.ua.pt";
+//$user = "deca-allg-dbo";
+//$pass = "sWwWuZA6KsIkkvgw";
+//$db = "deca-allg";
 
 $host = "localhost";
 $user = "root";
