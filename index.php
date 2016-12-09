@@ -37,7 +37,6 @@ if (isset($_GET["ask"])) {
     }
 /**------------------------**/
 
-
 //========== Obter a hash em vigor para validar se o utilizador tem permissões para editar o username =========
 //    $query = "INSERT INTO bibliotecasteam(idbiblioteca, nome) VALUES(?,?)";
 //    $games_insert = mysqli_prepare($connect, $query);

@@ -6,6 +6,8 @@
  * Time: 00:06
  */
 
+if( !isset($_SESSION)){session_start();}
+
 require('vendor/autoload.php');
 require('connections/connection.php');
 
@@ -35,7 +37,7 @@ if(isset($_GET['loginBattle'])) {
     $client_secret = 'awt7GCwyPNCqp9SpWtfYN2dKfPaKcSf9';
     $region = 'EU';
     $locale = 'pt';
-    $redirect_uri = 'https://localhost/Lab5/SteamBattleNet/main.php';
+    $redirect_uri = 'https://localhost/Lab5/SteamBattleNet/index.php';
 
     $Bclient = new OAuth2\Client($client_id, $client_secret, $region, $locale, $redirect_uri);
 
@@ -125,6 +127,17 @@ try
                     ";
             }
 
+            $steamName=$player->personaname;
+            $steamImg=$player->avatarfull;
+
+            $email=$_SESSION["email"];
+
+            $queryS = "UPDATE utilizadores SET steamID = ?, steamName = ?, steamImg = ? WHERE email = ?";
+            $stmtS = mysqli_prepare($connect, $queryS);
+            mysqli_stmt_bind_param($stmtS, 'ssss', $steamid, $steamName, $steamImg, $email);
+            mysqli_stmt_execute($stmtS);
+            mysqli_stmt_close($stmtS);
+
         }
         else
         {
@@ -176,7 +189,7 @@ if (isset($_GET['loginFacebook'])){
     $user_profile = $adapter->getUserProfile();
 
 //    para mostrar o recebido
-    var_dump($user_profile);
+//    var_dump($user_profile);
 
     $nome=$user_profile->displayName;
     $email=$user_profile->emailVerified;
@@ -195,8 +208,12 @@ if (isset($_GET['loginFacebook'])){
     $query = "INSERT INTO utilizadores(nome,email,idade,genero,imgPerfil) VALUES(?,?,?,?,?)";
     $user_insert = mysqli_prepare($connect, $query);
     mysqli_stmt_bind_param($user_insert, 'sssss', $nome, $email,$idade,$genero, $img);
-    mysqli_stmt_execute($user_insert);
+    if(mysqli_stmt_execute($user_insert)){
+        $_SESSION["username"]=$nome;
+        $_SESSION["email"]=$email;
+    };
     mysqli_stmt_close($user_insert);
+
 
 }
 
@@ -238,7 +255,10 @@ if (isset($_GET['loginGoogle'])){
     $queryGoogle = "INSERT INTO utilizadores(nome,email,idade,genero,imgPerfil) VALUES(?,?,?,?,?)";
     $user_insertG = mysqli_prepare($connect, $queryGoogle);
     mysqli_stmt_bind_param($user_insertG, 'sssss', $nomeG, $emailG,$idadeG,$generoG, $imgG);
-    mysqli_stmt_execute($user_insertG);
+    if(mysqli_stmt_execute($user_insertG)){
+        $_SESSION["username"]=$nomeG;
+        $_SESSION["email"]=$emailG;
+    };
     mysqli_stmt_close($user_insertG);
 
 }
