@@ -57,7 +57,19 @@ if(isset($_GET['loginBattle'])) {
         $_POST['user'] = $response;
     }
 }
-//exemplo de uery de info
+
+if(isset($_GET['id'])){
+    $email=$_SESSION["email"];
+    $battleName=$_GET['name']."#".$_GET['ref'];
+    $battleid=$_GET['id'];
+
+    $queryB = "UPDATE utilizadores SET battleTag = ?, battleName = ? WHERE email = ?";
+    $stmtB = mysqli_prepare($connect, $queryB);
+    mysqli_stmt_bind_param($stmtB, 'sss', $battleid, $battleName, $email);
+    mysqli_stmt_execute($stmtB);
+    mysqli_stmt_close($stmtB);
+}
+//exemplo de query de info
 //$r = $Bclient->fetch('user',array('name'=>'ulminia','server'=>'zangarmarsh','fields'=>'items,stats'));
 //echo '<pre>';
 //print_r($r);

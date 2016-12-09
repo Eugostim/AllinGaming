@@ -6,9 +6,14 @@
  * Time: 16:54
  */
 
+if( !isset($_SESSION)){session_start();}
+
 require('vendor/autoload.php');
 require_once ('connections/connection.php');
 ini_set('max_execution_time', 300);
+
+
+/**ESTA PÁGINA DESTINA-SE A ROTINAS E TASKS E NÃO DEVE EM MOMENTO ALGUM SER MOSTRADA AO UTILIZADOR**/
 
 /**Codigo para inserir jogos steam na base de dados**/
 
@@ -35,7 +40,7 @@ if (isset($_GET["ask"])) {
         mysqli_stmt_close($games_insert);
 
     }
-/**------------------------**/
+    /**------------------------**/
 
 //========== Obter a hash em vigor para validar se o utilizador tem permissões para editar o username =========
 //    $query = "INSERT INTO bibliotecasteam(idbiblioteca, nome) VALUES(?,?)";
@@ -133,25 +138,34 @@ if (isset($_GET["ask"])) {
 //print_r($news);
 
 
+if(isset($_GET["code"])) {
 
-//require('vendor/autoload.php');
-//require('includes/blizzard-api-oauth-master/Client.php');
-//require('includes/blizzard-api-oauth-master/GrantType/IGrantType.php');
-//require('includes/blizzard-api-oauth-master/GrantType/AuthorizationCode.php');
-//
-//$client_id		= 'c7ecz58d75qgq3fb3wu6rg9spyn7e5z5';
-//$client_secret		= 'awt7GCwyPNCqp9SpWtfYN2dKfPaKcSf9';
-//$region			= 'EU';
-//$locale			= 'pt';
-//$redirect_uri		= 'https://localhost/Lab5/SteamBattleNet/index.php';
-//
-//$client = new OAuth2\Client($client_id, $client_secret, $region, $locale, $redirect_uri);
-//
-//$params = array('code' => $_GET['code'], 'auth_flow' => 'auth_code', 'redirect_uri' => $client->redirect_uri);
-//$response = $client->getAccessToken($client->baseurl[$client->region]['TOKEN_ENDPOINT'], 'authorization_code', $params);
-//$client->setAccessToken($response['result']['access_token']);
-//$response = $client->fetch('user',array('source'=>'account'));
-//echo '<pre>';
-//print_r($response);
-//echo '</pre>';
 
+    require('vendor/autoload.php');
+    require('includes/blizzard-api-oauth-master/Client.php');
+    require('includes/blizzard-api-oauth-master/GrantType/IGrantType.php');
+    require('includes/blizzard-api-oauth-master/GrantType/AuthorizationCode.php');
+
+    $client_id = 'c7ecz58d75qgq3fb3wu6rg9spyn7e5z5';
+    $client_secret = 'awt7GCwyPNCqp9SpWtfYN2dKfPaKcSf9';
+    $region = 'EU';
+    $locale = 'pt';
+    $redirect_uri = 'https://localhost/Lab5/SteamBattleNet/index.php';
+
+    $client = new OAuth2\Client($client_id, $client_secret, $region, $locale, $redirect_uri);
+
+    $params = array('code' => $_GET['code'], 'auth_flow' => 'auth_code', 'redirect_uri' => $client->redirect_uri);
+    $response = $client->getAccessToken($client->baseurl[$client->region]['TOKEN_ENDPOINT'], 'authorization_code', $params);
+    $client->setAccessToken($response['result']['access_token']);
+    $response = $client->fetch('user', array('source' => 'account'));
+    echo '<pre>';
+    print_r($response);
+    echo '</pre>';
+
+    $r = $response['result'];
+    $battleID = $r["id"];
+    $battleName = substr($r["battletag"], 0, -5);
+    $ref = substr($r['battletag'], -4, 4);
+//echo $battleName;
+    header('Location:main.php?id=' . $battleID . '&name=' . $battleName . '&ref=' . $ref);
+}
