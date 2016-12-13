@@ -142,13 +142,44 @@ try
             $steamName=$player->personaname;
             $steamImg=$player->avatarfull;
 
-            $email=$_SESSION["email"];
-
             $queryS = "UPDATE utilizadores SET steamID = ?, steamName = ?, steamImg = ? WHERE email = ?";
             $stmtS = mysqli_prepare($connect, $queryS);
-            mysqli_stmt_bind_param($stmtS, 'ssss', $steamid, $steamName, $steamImg, $email);
+            mysqli_stmt_bind_param($stmtS, 'ssss', $steamid, $steamName, $steamImg, $_SESSION["email"]);
             mysqli_stmt_execute($stmtS);
             mysqli_stmt_close($stmtS);
+
+            $queryID = "SELECT idutilizadores FROM utilizadores WHERE email = ?";
+            $stmtS = mysqli_prepare($connect, $queryID);
+            mysqli_stmt_bind_param($stmtS, 's',$_SESSION["email"]);
+            mysqli_stmt_bind_result($stmtS, $userID);
+            mysqli_stmt_execute($stmtS);
+            mysqli_stmt_fetch($stmtS);
+            mysqli_stmt_close($stmtS);
+
+
+
+            /**Inserir Biblioteca**/
+            $libraryPage=json_decode(file_get_contents("https://api.steampowered.com/IPlayerService/GetOwnedGames/v1?key=$_STEAMAPI&steamid=$steamid&include_appinfo=1&include_played_free_games=1"),true);
+            $responseGames=$libraryPage["response"];
+            $games=$responseGames["games"];
+            for($i=0;$i<count($games);$i++){
+                $selected=$games[$i];
+                $appID=$selected["appid"];
+                $imgURL=$selected["img_logo_url"];
+                $imgGame="http://media.steampowered.com/steamcommunity/public/images/apps/$appID/$imgURL.jpg";
+                $queryLibrary = "INSERT INTO bibliotecasteam_has_utilizadores(bibliotecasteam_idbibliotecasteam, utilizadores_idutilizadores) VALUES(?,?)";
+                $library_insert = mysqli_prepare($connect, $queryLibrary);
+                mysqli_stmt_bind_param($library_insert, 'ii', $appID, $userID);
+                mysqli_stmt_execute($library_insert);
+                mysqli_stmt_close($library_insert);
+
+                $queryLibraryImg = "UPDATE bibliotecasteam SET imgURL = ? WHERE idbiblioteca = ?";
+                $stmtLibraryImg = mysqli_prepare($connect, $queryLibraryImg);
+                mysqli_stmt_bind_param($stmtLibraryImg, 'si', $imgGame, $appID);
+                mysqli_stmt_execute($stmtLibraryImg);
+                mysqli_stmt_close($stmtLibraryImg);
+
+            }
 
         }
         else
@@ -219,13 +250,12 @@ if (isset($_GET['loginFacebook'])){
 
     $query = "INSERT INTO utilizadores(nome,email,idade,genero,imgPerfil) VALUES(?,?,?,?,?)";
     $user_insert = mysqli_prepare($connect, $query);
-    mysqli_stmt_bind_param($user_insert, 'sssss', $nome, $email,$idade,$genero, $img);
-    if(mysqli_stmt_execute($user_insert)){
-        $_SESSION["username"]=$nome;
-        $_SESSION["email"]=$email;
-    };
+    mysqli_stmt_bind_param($user_insert, 'sssss', $nome,$email,$idade,$genero,$img);
+    mysqli_stmt_execute($user_insert);
     mysqli_stmt_close($user_insert);
 
+    $_SESSION["username"]=$nome;
+    $_SESSION["email"]=$email;
 
 }
 
@@ -267,10 +297,10 @@ if (isset($_GET['loginGoogle'])){
     $queryGoogle = "INSERT INTO utilizadores(nome,email,idade,genero,imgPerfil) VALUES(?,?,?,?,?)";
     $user_insertG = mysqli_prepare($connect, $queryGoogle);
     mysqli_stmt_bind_param($user_insertG, 'sssss', $nomeG, $emailG,$idadeG,$generoG, $imgG);
-    if(mysqli_stmt_execute($user_insertG)){
-        $_SESSION["username"]=$nomeG;
-        $_SESSION["email"]=$emailG;
-    };
+    mysqli_stmt_execute($user_insertG);
     mysqli_stmt_close($user_insertG);
+
+    $_SESSION["username"]=$nomeG;
+    $_SESSION["email"]=$emailG;
 
 }
