@@ -68,6 +68,23 @@ if(isset($_GET['id'])){
     mysqli_stmt_bind_param($stmtB, 'sss', $battleid, $battleName, $email);
     mysqli_stmt_execute($stmtB);
     mysqli_stmt_close($stmtB);
+
+    $queryID = "SELECT idutilizadores FROM utilizadores WHERE email = ?";
+    $stmtS = mysqli_prepare($connect, $queryID);
+    mysqli_stmt_bind_param($stmtS, 's',$_SESSION["email"]);
+    mysqli_stmt_bind_result($stmtS, $userID);
+    mysqli_stmt_execute($stmtS);
+    mysqli_stmt_fetch($stmtS);
+    mysqli_stmt_close($stmtS);
+
+
+    for($i=1;$i<7;$i++) {
+        $queryLibrary = "INSERT INTO utilizadores_has_bibliotecabattle(utilizadores_idutilizadores, bibliotecabattle_idbibliotecabattle) VALUES(?,?)";
+        $library_insert = mysqli_prepare($connect, $queryLibrary);
+        mysqli_stmt_bind_param($library_insert, 'ii', $userID, $i);
+        mysqli_stmt_execute($library_insert);
+        mysqli_stmt_close($library_insert);
+    }
 }
 //exemplo de query de info
 //$r = $Bclient->fetch('user',array('name'=>'ulminia','server'=>'zangarmarsh','fields'=>'items,stats'));
@@ -166,10 +183,11 @@ try
                 $selected=$games[$i];
                 $appID=$selected["appid"];
                 $imgURL=$selected["img_logo_url"];
+                $playtime=$selected["playtime_forever"];
                 $imgGame="http://media.steampowered.com/steamcommunity/public/images/apps/$appID/$imgURL.jpg";
-                $queryLibrary = "INSERT INTO bibliotecasteam_has_utilizadores(bibliotecasteam_idbibliotecasteam, utilizadores_idutilizadores) VALUES(?,?)";
+                $queryLibrary = "INSERT INTO bibliotecasteam_has_utilizadores(bibliotecasteam_idbibliotecasteam, utilizadores_idutilizadores, playtime) VALUES(?,?,?)";
                 $library_insert = mysqli_prepare($connect, $queryLibrary);
-                mysqli_stmt_bind_param($library_insert, 'ii', $appID, $userID);
+                mysqli_stmt_bind_param($library_insert, 'iis', $appID, $userID, $playtime);
                 mysqli_stmt_execute($library_insert);
                 mysqli_stmt_close($library_insert);
 
