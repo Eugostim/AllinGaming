@@ -24,7 +24,7 @@ class Hybrid_Endpoint {
 	public function __construct($request = null) {
 		if (is_null($request)) {
 			// Fix a strange behavior when some provider call back ha endpoint
-			// with /index.php?hauth.done={provider}?{args}...
+			// with /inicio.php?hauth.done={provider}?{args}...
 			// >here we need to parse $_SERVER[QUERY_STRING]
 			$request = $_REQUEST;
 			if (isset($_SERVER["QUERY_STRING"]) && strrpos($_SERVER["QUERY_STRING"], '?')) {

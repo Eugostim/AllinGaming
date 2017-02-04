@@ -167,5 +167,5 @@ if(isset($_GET["code"])) {
     $battleName = substr($r["battletag"], 0, -5);
     $ref = substr($r['battletag'], -4, 4);
 //echo $battleName;
-    header('Location:main.php?id=' . $battleID . '&name=' . $battleName . '&ref=' . $ref);
+    header('Location:login.php?id=' . $battleID . '&name=' . $battleName . '&ref=' . $ref);
 }

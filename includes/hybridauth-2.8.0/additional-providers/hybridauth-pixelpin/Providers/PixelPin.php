@@ -20,9 +20,9 @@ class Hybrid_Providers_PixelPin extends Hybrid_Provider_Model_OAuth2
 		parent::initialize();
 
 		// Provider apis end-points
-		$this->api->api_base_url  = "https://ws3.pixelpin.co.uk/index.php/api/";
+		$this->api->api_base_url  = "https://ws3.pixelpin.co.uk/inicio.php/api/";
 		$this->api->authorize_url = "https://login.pixelpin.co.uk/OAuth2/FLogin.aspx";
-		$this->api->token_url     = "https://ws3.pixelpin.co.uk/index.php/api/token"; 
+		$this->api->token_url     = "https://ws3.pixelpin.co.uk/inicio.php/api/token";
 
 		$this->api->sign_token_name = "oauth_token";
 	}

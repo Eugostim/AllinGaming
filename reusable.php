@@ -8,7 +8,7 @@
 
 /**Notícias Steam para um determinado jogo (necessita appID)**/
 
-$appID=4700;// receber o appid correto
+$appID=730;// receber o appid correto EDIT: CSGO FTW
 
 date_default_timezone_set('GMT');
 $news=json_decode(file_get_contents("https://api.steampowered.com/ISteamNews/GetNewsForApp/v2?appid=$appID"),true);

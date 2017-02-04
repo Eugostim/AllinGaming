@@ -58,7 +58,7 @@ class Hybrid_Providers_HumanitarianId extends Hybrid_Provider_Model_OAuth2
    */
   function loginFinish() {
     // Fix a strange behavior when some provider call back ha endpoint
-    // with /index.php?hauth.done={provider}?{args}...
+    // with /inicio.php?hauth.done={provider}?{args}...
     // >here we need to parse $_SERVER[QUERY_STRING]
     $request = array();
     if (strrpos($_REQUEST['hauth_done'], '?')) {
